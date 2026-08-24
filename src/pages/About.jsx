@@ -63,7 +63,7 @@ export default function About() {
           </div>
         </Reveal>
       </div>
-      <footer className="foot">© 2026 Your Name · Placeholder bio</footer>
+      <footer className="foot">© 2026 Mrigank Singh · Placeholder bio</footer>
     </div>
   );
 }

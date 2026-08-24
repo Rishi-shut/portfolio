@@ -37,7 +37,7 @@ export default function Work() {
           </Reveal>
         ))}
       </div>
-      <footer className="foot">© 2026 Your Name · Placeholder projects</footer>
+      <footer className="foot">© 2026 Mrigank Singh · Placeholder projects</footer>
     </div>
   );
 }

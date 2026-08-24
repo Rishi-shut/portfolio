@@ -13,7 +13,7 @@ export default function Nav({ page, go }) {
     <nav className="topnav">
       <div className="wrap">
         <button className="wordmark" onClick={() => go("home")} data-hover>
-          Your Name<em> — {String(index + 1).padStart(2, "0")}/06</em>
+          Mrigank Singh<em> — {String(index + 1).padStart(2, "0")}/06</em>
         </button>
         <div className="navlinks">
           {LINKS.map(([id, label]) => (

@@ -33,7 +33,7 @@ export default function Contact() {
           </div>
         </FadeUp>
       </section>
-      <footer className="foot">© 2026 Your Name · Built with React + WebGL</footer>
+      <footer className="foot">© 2026 Mrigank Singh · Built with React + WebGL</footer>
     </div>
   );
 }
