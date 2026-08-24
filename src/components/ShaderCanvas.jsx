@@ -453,7 +453,7 @@ export default function ShaderCanvas() {
       trailWrite.dispose?.();
       renderer.gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, [engine, mood]);
+  }, [engine, mood.setMood]);
 
   return (
     <>
