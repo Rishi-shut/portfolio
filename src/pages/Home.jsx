@@ -1,4 +1,6 @@
+﻿import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import PrismScene from "../three/PrismScene";
 import Magnetic from "../components/Magnetic";
 import Marquee from "../components/Marquee";
 import { SplitLetters, FadeUp } from "../components/Motion";
@@ -11,6 +13,36 @@ const MARQUEE = [
   { text: "Experience", solid: false },
 ];
 
+function useDrift(speed) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const loop = () => {
+      const el = ref.current;
+      if (el) {
+        const r = el.getBoundingClientRect();
+        const off = (r.top + r.height / 2 - window.innerHeight / 2) * speed;
+        el.style.transform = `translate3d(0, ${off}px, 0)`;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [speed]);
+  return ref;
+}
+
+function DriftCard({ speed, pos, k, v }) {
+  const ref = useDrift(speed);
+  return (
+    <div ref={ref} className={`drift-card ${pos}`}>
+      <span className="k">{k}</span>
+      <span className="v font-display">{v}</span>
+    </div>
+  );
+}
+
 export default function Home({ go, start }) {
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -21,6 +53,9 @@ export default function Home({ go, start }) {
   const t2x = useTransform(px, (v) => v * -22);
   const t2y = useTransform(py, (v) => v * -14);
 
+  const chipA = useRef(null);
+  const chipB = useRef(null);
+
   const onMouse = (e) => {
     mx.set(e.clientX / window.innerWidth - 0.5);
     my.set(e.clientY / window.innerHeight - 0.5);
@@ -28,6 +63,8 @@ export default function Home({ go, start }) {
 
   return (
     <div className="wrap">
+      <PrismScene chipA={chipA} chipB={chipB} />
+
       <section className="hero" onMouseMove={onMouse}>
         <FadeUp play={start} delay={0.15}>
           <div className="meta-row">
@@ -69,14 +106,49 @@ export default function Home({ go, start }) {
 
         <FadeUp play={start} delay={1.2}>
           <div className="hint-row" id="hint">
-            <span>Scroll to explore</span>
+            <span>Scroll to discover</span>
             <span>Drag to stir the fluid</span>
             <span>Click to pulse · Keys 1–6 for moods</span>
           </div>
         </FadeUp>
+
+        <div className="scroll-cue">Scroll to discover</div>
       </section>
 
       <Marquee items={MARQUEE} />
+
+      <section className="beat">
+        <FadeUp play={start} delay={0.05}>
+          <span className="eyebrow">The Practice</span>
+        </FadeUp>
+        <FadeUp play={start} delay={0.15}>
+          <h2 className="font-display">Design. Code. Motion.</h2>
+        </FadeUp>
+        <FadeUp play={start} delay={0.25}>
+          <p>
+            Placeholder line — one sentence about how you blend engineering and
+            aesthetics into products that feel alive under the cursor.
+          </p>
+        </FadeUp>
+      </section>
+
+      <section className="drift">
+        <DriftCard pos="p1" speed={0.07} k="Live Builds" v="03" />
+        <DriftCard pos="p2" speed={-0.05} k="Color Moods" v="06" />
+        <DriftCard pos="p3" speed={0.09} k="Rendered With" v="WebGL" />
+        <DriftCard pos="p4" speed={-0.08} k="Powered By" v="React" />
+      </section>
+
+      <div className="giant-mark font-display" aria-hidden="true">
+        Mrigank
+      </div>
+
+      <div className="hud-chip" ref={chipA} style={{ transform: "translate(-200px, -200px)" }}>
+        <i /><span>SHARD_01</span>
+      </div>
+      <div className="hud-chip" ref={chipB} style={{ transform: "translate(-200px, -200px)" }}>
+        <i /><span>SHARD_03</span>
+      </div>
     </div>
   );
 }

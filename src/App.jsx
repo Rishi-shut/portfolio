@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Lenis from "lenis";
 import { MoodProvider } from "./context/MoodContext";
 import ShaderCanvas from "./components/ShaderCanvas";
 import Cursor from "./components/Cursor";
@@ -20,6 +21,21 @@ const pageMotion = {
 export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [page, setPage] = useState("home");
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+    let raf = 0;
+    const loop = (time) => {
+      lenis.raf(time);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(raf);
+      lenis.destroy();
+    };
+  }, []);
 
   const go = (p) => {
     setPage(p);
