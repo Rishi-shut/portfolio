@@ -1,5 +1,5 @@
 ﻿import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
 import PrismScene from "../three/PrismScene";
 import Magnetic from "../components/Magnetic";
 import Marquee from "../components/Marquee";
@@ -56,6 +56,13 @@ export default function Home({ go, start }) {
   const chipA = useRef(null);
   const chipB = useRef(null);
 
+  const { scrollY } = useScroll();
+  const vh = typeof window !== "undefined" ? window.innerHeight : 900;
+  const heroScale = useTransform(scrollY, [0, vh], [1, 2.5]);
+  const heroFade = useTransform(scrollY, [0, vh * 0.7], [1, 0]);
+  const heroBlur = useTransform(scrollY, [0, vh * 0.8], ["blur(0px)", "blur(14px)"]);
+  const cueFade = useTransform(scrollY, [0, 220], [1, 0]);
+
   const onMouse = (e) => {
     mx.set(e.clientX / window.innerWidth - 0.5);
     my.set(e.clientY / window.innerHeight - 0.5);
@@ -66,53 +73,60 @@ export default function Home({ go, start }) {
       <PrismScene chipA={chipA} chipB={chipB} />
 
       <section className="hero" onMouseMove={onMouse}>
-        <FadeUp play={start} delay={0.15}>
-          <div className="meta-row">
-            <span>Folio © 2026</span>
-            <span><span className="status-dot" />Open for work</span>
-          </div>
-        </FadeUp>
-
-        <h1 className="hero-title font-display">
-          <motion.span style={{ x: t1x, y: t1y, display: "block" }}>
-            <SplitLetters text="Creative" play={start} delay={0.25} stagger={0.035} />
-          </motion.span>
-          <motion.span className="stroke" style={{ x: t2x, y: t2y, display: "block" }}>
-            <SplitLetters text="Developer" play={start} delay={0.45} stagger={0.035} />
-            <span className="tm font-display">©</span>
-          </motion.span>
-        </h1>
-
-        <div className="hero-sub">
-          <FadeUp play={start} delay={0.9}>
-            <p className="hero-blurb">
-              Placeholder tagline — one or two lines about who you are, what you
-              build, and the kind of problems you enjoy solving.
-            </p>
+        <motion.div
+          className="hero-zoom"
+          style={{ scale: heroScale, opacity: heroFade, filter: heroBlur }}
+        >
+          <FadeUp play={start} delay={0.15}>
+            <div className="meta-row">
+              <span>Folio © 2026</span>
+              <span><span className="status-dot" />Open for work</span>
+            </div>
           </FadeUp>
-          <FadeUp play={start} delay={1.05} className="cta-row">
-            <Magnetic>
-              <button className="btn btn-primary" onClick={() => go("work")}>
-                View Work ↗
-              </button>
-            </Magnetic>
-            <Magnetic>
-              <button className="btn btn-ghost" onClick={() => go("contact")}>
-                Get in Touch
-              </button>
-            </Magnetic>
-          </FadeUp>
-        </div>
 
-        <FadeUp play={start} delay={1.2}>
-          <div className="hint-row" id="hint">
-            <span>Scroll to discover</span>
-            <span>Drag to stir the fluid</span>
-            <span>Click to pulse · Keys 1–6 for moods</span>
+          <h1 className="hero-title font-display">
+            <motion.span style={{ x: t1x, y: t1y, display: "block" }}>
+              <SplitLetters text="Creative" play={start} delay={0.25} stagger={0.035} />
+            </motion.span>
+            <motion.span className="stroke" style={{ x: t2x, y: t2y, display: "block" }}>
+              <SplitLetters text="Developer" play={start} delay={0.45} stagger={0.035} />
+              <span className="tm font-display">©</span>
+            </motion.span>
+          </h1>
+
+          <div className="hero-sub">
+            <FadeUp play={start} delay={0.9}>
+              <p className="hero-blurb">
+                Placeholder tagline — one or two lines about who you are, what you
+                build, and the kind of problems you enjoy solving.
+              </p>
+            </FadeUp>
+            <FadeUp play={start} delay={1.05} className="cta-row">
+              <Magnetic>
+                <button className="btn btn-primary" onClick={() => go("work")}>
+                  View Work ↗
+                </button>
+              </Magnetic>
+              <Magnetic>
+                <button className="btn btn-ghost" onClick={() => go("contact")}>
+                  Get in Touch
+                </button>
+              </Magnetic>
+            </FadeUp>
           </div>
-        </FadeUp>
 
-        <div className="scroll-cue">Scroll to discover</div>
+          <FadeUp play={start} delay={1.2}>
+            <div className="hint-row" id="hint">
+              <span>Scroll to discover</span>
+              <span>Drag to stir the fluid</span>
+              <span>Click to pulse · Keys 1–6 for moods</span>
+            </div>
+          </FadeUp>
+        </motion.div>
+
+        <motion.div className="scroll-cue" style={{ opacity: cueFade }}>
+          Scroll to discover
+        </motion.div>
       </section>
 
       <Marquee items={MARQUEE} />

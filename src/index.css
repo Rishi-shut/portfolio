@@ -948,6 +948,11 @@ textarea.finput { resize: none; line-height: 1.65; min-height: 150px; }
   background: rgb(var(--tint));
 }
 
+.hero-zoom {
+  will-change: transform, opacity, filter;
+  transform-origin: 50% 42%;
+}
+
 .scroll-cue {
   position: absolute;
   bottom: 22px;
@@ -1088,31 +1093,62 @@ textarea.finput { resize: none; line-height: 1.65; min-height: 150px; }
   position: fixed;
   inset: 0;
   z-index: 100;
+}
+.pre-half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
   background: #05060a;
+}
+.pre-half.top { top: 0; }
+.pre-half.bottom { bottom: 0; }
+.pre-core {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 20px;
 }
-.pre-count {
-  font-family: "Syne", sans-serif;
-  font-size: clamp(64px, 14vw, 160px);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-.pre-label {
-  font-size: 10.5px;
+.pre-corner {
+  position: absolute;
+  font-size: 10px;
   font-weight: 650;
-  letter-spacing: 0.34em;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--ink-faint);
 }
+.pre-corner.tl { top: 26px; left: var(--gutter); }
+.pre-corner.tr { top: 26px; right: var(--gutter); }
+.pre-gem {
+  width: clamp(90px, 12vw, 130px);
+  overflow: visible;
+  filter: drop-shadow(0 0 18px rgb(var(--tint) / 0.35));
+}
+.pre-stroke {
+  fill: none;
+  stroke: rgb(var(--tint));
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pre-stroke.facet {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1;
+}
+.pre-count {
+  font-size: clamp(72px, 15vw, 170px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-shadow: 0 4px 50px rgb(var(--tint) / 0.3);
+}
 .pre-bar {
-  width: min(320px, 60vw);
-  height: 1.5px;
-  background: rgba(255, 255, 255, 0.1);
+  width: min(340px, 64vw);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
   border-radius: 99px;
 }
@@ -1120,6 +1156,13 @@ textarea.finput { resize: none; line-height: 1.65; min-height: 150px; }
   height: 100%;
   background: rgb(var(--tint));
   transform-origin: left;
+}
+.pre-label {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
 .cursor-dot, .cursor-ring {
