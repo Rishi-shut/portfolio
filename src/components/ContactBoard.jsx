@@ -1,8 +1,76 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useMood, MOODS } from "../context/MoodContext";
+import { gradAt, hex } from "../shader/moods";
 
 const EMAIL = "mriganksingh7890@gmail.com";
+
+const TRACKS = [
+  { id: "jazz", label: "Jazz", src: "./music/jazz.mp3" },
+  { id: "classic", label: "Classic", src: "./music/classical.mp3" },
+  { id: "lofi", label: "Lo-Fi", src: "./music/lofi.mp3" },
+];
+
+function Vinyl() {
+  const audioRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+  const [genre, setGenre] = useState("jazz");
+
+  const track = TRACKS.find((x) => x.id === genre);
+
+  const toggle = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (playing) {
+      a.pause();
+      setPlaying(false);
+    } else {
+      a.volume = 0.45;
+      a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    }
+  };
+
+  const pick = (g) => {
+    const a = audioRef.current;
+    if (!a) return;
+    const t = TRACKS.find((x) => x.id === g);
+    setGenre(g);
+    if (a.src !== t.src) a.src = t.src;
+    a.volume = 0.45;
+    a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+  };
+
+  return (
+    <Tile className="t-vinyl" delay={0.18} label="Music player">
+      <audio ref={audioRef} src={track.src} preload="auto" loop />
+      <button
+        type="button"
+        className={`vinyl${playing ? " spin" : ""}`}
+        onClick={toggle}
+        aria-label={playing ? "Pause music" : "Play music"}
+      >
+        <span className="vinyl-label" />
+        <span className="vinyl-hole" />
+      </button>
+      <div className="vinyl-eq" data-on={playing}>
+        <i style={{ "--i": 0 }} /><i style={{ "--i": 1 }} /><i style={{ "--i": 2 }} /><i style={{ "--i": 3 }} />
+      </div>
+      <div className="vinyl-genres">
+        {TRACKS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className={`genre-btn${genre === t.id ? " active" : ""}`}
+            onClick={() => pick(t.id)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+      <span className="tile-sub">{playing ? `Now Playing · ${track.label}` : "Pick a record"}</span>
+    </Tile>
+  );
+}
 
 function Tile({ className = "", delay = 0, children, onClick, href, label }) {
   const tag = href ? motion.a : onClick ? motion.button : motion.div;
@@ -83,24 +151,7 @@ function Dial() {
   );
 }
 
-function DotMatrix() {
-  const cols = 6;
-  const rows = 13;
-  return (
-    <div className="dotmatrix">
-      {Array.from({ length: cols * rows }, (_, i) => (
-        <span
-          key={i}
-          className="tdot"
-          style={{ "--d": `${(i % cols) + Math.floor(i / cols)}` }}
-        />
-      ))}
-    </div>
-  );
-}
-
 export default function ContactBoard({ go }) {
-  const { index, setMood } = useMood();
   const [copied, setCopied] = useState(false);
   const { time, date } = Clock();
 
@@ -156,8 +207,8 @@ export default function ContactBoard({ go }) {
           <span className="tile-sub">{copied ? "copied" : "email"}</span>
         </Tile>
 
-        <Tile className="t-dots" delay={0.18}>
-          <DotMatrix />
+        <Tile className="t-vinyl" delay={0.18} label="Music player">
+          <Vinyl />
         </Tile>
 
         <Tile className="t-hello" delay={0.24} onClick={toForm} label="Scroll to contact form">
@@ -174,13 +225,8 @@ export default function ContactBoard({ go }) {
           <Dial />
         </Tile>
 
-        <Tile className="t-mood round" delay={0.42} onClick={() => setMood((index + 1) % MOODS.length)} label="Next mood">
-          <span className="mood-next" data-mood={MOODS[(index + 1) % MOODS.length].name} />
-          <span className="tile-sub">mood</span>
-        </Tile>
-
         <Tile
-          className="t-social"
+          className="t-social s-gh"
           delay={0.48}
           href="https://github.com/Rishi-shut"
           label="GitHub profile"
@@ -192,7 +238,7 @@ export default function ContactBoard({ go }) {
         </Tile>
 
         <Tile
-          className="t-social"
+          className="t-social s-li"
           delay={0.54}
           href="https://www.linkedin.com/in/mrigank-singh-9215512a8/"
           label="LinkedIn profile"
@@ -203,12 +249,22 @@ export default function ContactBoard({ go }) {
           <span className="tile-sub">linkedin</span>
         </Tile>
 
-        <Tile className="t-social" delay={0.6} onClick={toForm} label="Open contact form">
+        <Tile className="t-social s-write" delay={0.6} onClick={toForm} label="Open contact form">
           <svg viewBox="0 0 24 24" className="soc-ico" fill="none" stroke="currentColor" strokeWidth="1.6">
             <rect x="3" y="5.5" width="18" height="13" rx="2.5" />
             <path d="M3.5 7l8.5 6 8.5-6" />
           </svg>
           <span className="tile-sub">write</span>
+        </Tile>
+
+        <Tile
+          className="t-top round"
+          delay={0.66}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          label="Back to top"
+        >
+          <span className="tile-big" style={{ fontSize: 20 }}>↑</span>
+          <span className="tile-sub">top</span>
         </Tile>
       </div>
 
