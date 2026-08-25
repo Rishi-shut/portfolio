@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Renderer, Program, Mesh, Triangle, Vec2, Vec3, Vec4, RenderTarget } from "ogl";
 import { useMood } from "../context/MoodContext";
-import { MOODS, blendCoeffs } from "../shader/moods";
+import { MOODS, blendCoeffs, DEFAULT_MOOD } from "../shader/moods";
 
 const VERTEX = `
   attribute vec2 uv;
@@ -258,11 +258,11 @@ export default function ShaderCanvas() {
         u_time: { value: 0 },
         u_grain: { value: 0 },
         u_aspect: { value: 1 },
-        u_s0: { value: new Vec3(...MOODS[0].stops[0]) },
-        u_s1: { value: new Vec3(...MOODS[0].stops[1]) },
-        u_s2: { value: new Vec3(...MOODS[0].stops[2]) },
-        u_s3: { value: new Vec3(...MOODS[0].stops[3]) },
-        u_tint: { value: new Vec3(...MOODS[0].tint) },
+        u_s0: { value: new Vec3(...MOODS[DEFAULT_MOOD].stops[0]) },
+        u_s1: { value: new Vec3(...MOODS[DEFAULT_MOOD].stops[1]) },
+        u_s2: { value: new Vec3(...MOODS[DEFAULT_MOOD].stops[2]) },
+        u_s3: { value: new Vec3(...MOODS[DEFAULT_MOOD].stops[3]) },
+        u_tint: { value: new Vec3(...MOODS[DEFAULT_MOOD].tint) },
         u_pointer: { value: new Vec2(0, 0) },
         u_press: { value: 0 },
         u_ripples: { value: Array.from({ length: 8 }, () => new Vec4(0.5, 0.5, -100, 0)) },

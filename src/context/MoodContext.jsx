@@ -1,11 +1,11 @@
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
-import { MOODS, blendCoeffs } from "../shader/moods";
+import { MOODS, blendCoeffs, DEFAULT_MOOD } from "../shader/moods";
 
 const MoodCtx = createContext(null);
 
 export function MoodProvider({ children }) {
-  const engine = useRef({ to: 0, from: null, t0: 0 });
-  const [index, setIndex] = useState(0);
+  const engine = useRef({ to: DEFAULT_MOOD, from: null, t0: 0 });
+  const [index, setIndex] = useState(DEFAULT_MOOD);
 
   const setMood = useCallback((i) => {
     const e = engine.current;

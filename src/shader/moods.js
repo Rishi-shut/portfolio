@@ -8,6 +8,7 @@ export const MOODS = [
 ];
 
 export const MOOD_MS = 900;
+export const DEFAULT_MOOD = 5;
 
 export function blendCoeffs(engine) {
   const k = blendK(engine);
