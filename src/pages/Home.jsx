@@ -53,14 +53,11 @@ export default function Home({ go, start }) {
   const t2x = useTransform(px, (v) => v * -22);
   const t2y = useTransform(py, (v) => v * -14);
 
-  const chipA = useRef(null);
-  const chipB = useRef(null);
-
   const { scrollY } = useScroll();
   const vh = typeof window !== "undefined" ? window.innerHeight : 900;
-  const heroScale = useTransform(scrollY, [0, vh], [1, 2.5]);
-  const heroFade = useTransform(scrollY, [0, vh * 0.7], [1, 0]);
-  const heroBlur = useTransform(scrollY, [0, vh * 0.8], ["blur(0px)", "blur(14px)"]);
+  const heroScale = useTransform(scrollY, [0, vh * 0.85], [1, 2.8]);
+  const heroFade = useTransform(scrollY, [0, vh * 0.62], [1, 0]);
+  const heroBlur = useTransform(scrollY, [0, vh * 0.7], ["blur(0px)", "blur(16px)"]);
   const cueFade = useTransform(scrollY, [0, 220], [1, 0]);
 
   const onMouse = (e) => {
@@ -70,7 +67,7 @@ export default function Home({ go, start }) {
 
   return (
     <div className="wrap">
-      <PrismScene chipA={chipA} chipB={chipB} />
+      <PrismScene />
 
       <section className="hero" onMouseMove={onMouse}>
         <motion.div
@@ -155,13 +152,6 @@ export default function Home({ go, start }) {
 
       <div className="giant-mark font-display" aria-hidden="true">
         Mrigank
-      </div>
-
-      <div className="hud-chip" ref={chipA} style={{ transform: "translate(-200px, -200px)" }}>
-        <i /><span>SHARD_01</span>
-      </div>
-      <div className="hud-chip" ref={chipB} style={{ transform: "translate(-200px, -200px)" }}>
-        <i /><span>SHARD_03</span>
       </div>
     </div>
   );

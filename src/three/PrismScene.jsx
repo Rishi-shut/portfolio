@@ -7,47 +7,31 @@ import {
   Program,
   Geometry,
   Vec3,
-  Mat4,
 } from "ogl";
 import { useMood } from "../context/MoodContext";
 import { blendCoeffs } from "../shader/moods";
 
+const COUNT = 3;
+
 const KEYS = [
   [
-    [2.8, 0.9],
-    [3.6, -1.6],
-    [-4.2, -1.2],
-    [-3.4, 1.8],
+    [2.9, 0.9],
+    [1.1, 0.6],
+    [3.8, 1.5],
   ],
   [
-    [1.0, 0.6],
-    [-1.2, -0.5],
-    [1.4, -1.2],
-    [-1.5, 1.1],
+    [-4.0, -1.1],
+    [-1.3, -0.5],
+    [-3.9, 1.3],
   ],
   [
-    [3.8, 1.6],
-    [-3.8, 1.2],
-    [3.2, -1.8],
-    [-3.2, -1.6],
-  ],
-  [
-    [-3.2, 2.2],
-    [-1.1, 2.5],
-    [1.1, 2.4],
-    [3.2, 2.2],
+    [-3.3, 1.7],
+    [1.5, -1.1],
+    [3.1, -1.7],
   ],
 ];
 
-const SCALES = [1.7, 1.25, 1.5, 1.05];
-
-const FLYER_KEYS = [
-  [2.4, 1.7, -6.5],
-  [0.4, 0.3, -2.4],
-  [-0.3, -0.2, 3.4],
-  [-2.6, -1.4, -5.5],
-];
-const FLYER_SCALE = 2.1;
+const SCALES = [1.75, 1.3, 1.5];
 
 const VERT = `
   attribute vec3 position;
@@ -70,7 +54,6 @@ const FRAG = `
   varying vec3 vNormal;
   varying vec3 vView;
   uniform vec3 uTint;
-  uniform float uBoost;
   void main() {
     vec3 n = normalize(vNormal);
     vec3 v = normalize(vView);
@@ -78,10 +61,8 @@ const FRAG = `
     float fr = pow(1.0 - abs(dot(n, v)), 1.55);
     vec3 col = mix(vec3(0.03, 0.04, 0.06), uTint, 0.28 + 0.72 * fr);
     float spec = pow(max(dot(reflect(-v, n), normalize(vec3(0.4, 0.9, 0.5))), 0.0), 22.0);
-    col += uTint * spec * 1.0;
-    col += uTint * uBoost * 0.16;
-    float a = (0.34 + 0.66 * fr) * (1.0 + uBoost * 0.9);
-    a *= smoothstep(24.0, 3.5, d);
+    col += uTint * spec;
+    float a = (0.34 + 0.66 * fr) * smoothstep(24.0, 3.5, d);
     gl_FragColor = vec4(col, a);
   }
 `;
@@ -131,7 +112,7 @@ function flatGeometry(gl) {
   });
 }
 
-export default function PrismScene({ chipA, chipB }) {
+export default function PrismScene() {
   const canvasRef = useRef(null);
   const mood = useMood();
   const engine = mood.engine;
@@ -159,39 +140,22 @@ export default function PrismScene({ chipA, chipB }) {
     const tintU = { value: new Vec3(...blendCoeffs(engine.current).tint) };
     const geometry = flatGeometry(gl);
 
-    function makeProgram(boostable) {
-      return new Program(gl, {
+    const meshes = [];
+    for (let i = 0; i < COUNT; i++) {
+      const program = new Program(gl, {
         vertex: VERT,
         fragment: FRAG,
         transparent: true,
         depthWrite: false,
         cullFace: null,
-        uniforms: {
-          uTint: tintU,
-          uBoost: { value: 0 },
-        },
+        uniforms: { uTint: tintU },
       });
-    }
-
-    const meshes = [];
-    for (let i = 0; i < KEYS.length; i++) {
-      const program = makeProgram();
       const mesh = new Mesh(gl, { geometry, program });
       mesh.setParent(scene);
       const s = SCALES[i];
       mesh.scale.set(s, s * 1.55, s);
-      mesh.userData = { keys: KEYS[i], rs: 0.16 + i * 0.03, phase: i * 1.7 };
       meshes.push(mesh);
     }
-
-    let flyer;
-    const flyerProgram = makeProgram();
-    flyer = new Mesh(gl, { geometry, program: flyerProgram });
-    flyer.setParent(scene);
-    const fs = FLYER_SCALE;
-    flyer.scale.set(fs, fs * 1.45, fs);
-    flyer.userData = { keys: FLYER_KEYS, rs: 0.12, phase: 2.4 };
-    meshes.push(flyer);
 
     const mouse = { x: 0, y: 0, sx: 0, sy: 0 };
     const onMove = (e) => {
@@ -207,31 +171,10 @@ export default function PrismScene({ chipA, chipB }) {
     window.addEventListener("resize", onResize);
     onResize();
 
-    const v = new Vec3();
-    const vp = new Mat4();
-
-    function updateChip(ref, i, name) {
-      const el = ref.current;
-      if (!el) return;
-      const m = meshes[i];
-      v.set(m.position.x, m.position.y, 0);
-      vp.multiply(camera.projectionMatrix, camera.viewMatrix);
-      v.applyMatrix4(vp);
-      const px = (v.x * 0.5 + 0.5) * window.innerWidth;
-      const py = (-v.y * 0.5 + 0.5) * window.innerHeight;
-      el.style.transform = `translate(${px + 14}px, ${py - 10}px)`;
-      const span = el.querySelector("span");
-      if (span) {
-        const deg = Math.round(((m.rotation.y * 180) / Math.PI) % 360);
-        span.textContent = `${name} · X ${m.position.x.toFixed(2)} · Y ${m.position.y.toFixed(2)} · ${deg}°`;
-      }
-    }
-
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf = 0;
     let last = performance.now();
     let t = Math.random() * 10;
-    let acc = 0;
 
     function frame(now) {
       raf = requestAnimationFrame(frame);
@@ -253,39 +196,23 @@ export default function PrismScene({ chipA, chipB }) {
       const coeffs = blendCoeffs(engine.current);
       tintU.value.set(coeffs.tint[0], coeffs.tint[1], coeffs.tint[2]);
 
-      const camZ = 9 - 15 * p;
-      camera.position.set(
-        mouse.sx * 0.4 + Math.sin(p * Math.PI * 2) * 0.5,
-        -mouse.sy * 0.3 + Math.cos(p * Math.PI * 2) * 0.35,
-        camZ
-      );
-      camera.rotation.z = Math.sin(p * Math.PI) * 0.05;
+      camera.position.x = mouse.sx * 0.4;
+      camera.position.y = -mouse.sy * 0.3;
       camera.updateMatrixWorld();
 
-      for (const m of meshes) {
-        const u = m.userData;
-        const A = u.keys[ki];
-        const B = u.keys[ki + 1];
+      scene.position.y = p * 0.7;
+
+      for (let i = 0; i < COUNT; i++) {
+        const m = meshes[i];
+        const A = KEYS[i][ki];
+        const B = KEYS[i][ki + 1];
         m.position.x = A[0] + (B[0] - A[0]) * f;
-        m.position.y = A[1] + (B[1] - A[1]) * f + Math.sin(t * 0.55 + u.phase) * 0.16;
-        m.position.z = (A[2] || 0) + ((B[2] || 0) - (A[2] || 0)) * f;
-        const dist = Math.abs(m.position.z - camZ);
-        const boost = 1 + 2.2 * Math.max(0, 1 - dist / 5);
-        m.rotation.x += dt * u.rs * boost * 0.55;
-        m.rotation.y += dt * u.rs * boost + mouse.sx * dt * 0.4;
-        if (m.program.uniforms.uBoost) {
-          m.program.uniforms.uBoost.value = Math.max(0, 1 - Math.abs(m.position.z - 1.1) / 2.4);
-        }
+        m.position.y = A[1] + (B[1] - A[1]) * f + Math.sin(t * 0.55 + i * 1.7) * 0.16;
+        m.rotation.x = t * 0.1 * (i % 2 ? -1 : 1) + mouse.sy * 0.2;
+        m.rotation.y = t * 0.16 + mouse.sx * 0.3 + i;
       }
 
       renderer.render({ scene, camera });
-
-      acc += dt;
-      if (acc > 0.12) {
-        acc = 0;
-        updateChip(chipA, 0, "SHARD_01");
-        updateChip(chipB, 4, "SHARD_05");
-      }
     }
     raf = requestAnimationFrame(frame);
 
@@ -295,7 +222,7 @@ export default function PrismScene({ chipA, chipB }) {
       window.removeEventListener("resize", onResize);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, [engine, chipA, chipB]);
+  }, [engine]);
 
   return <canvas ref={canvasRef} className="prism-canvas" aria-hidden="true" />;
 }
