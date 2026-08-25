@@ -49,7 +49,7 @@ export default function App() {
               {page === "home" && <Home go={go} start={loaded} />}
               {page === "work" && <Work />}
               {page === "about" && <About />}
-              {page === "contact" && <Contact />}
+              {page === "contact" && <Contact go={go} />}
             </motion.div>
           </AnimatePresence>
         </main>

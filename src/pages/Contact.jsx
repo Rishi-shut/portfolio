@@ -1,7 +1,8 @@
-import Magnetic from "../components/Magnetic";
-import { SplitLetters, FadeUp } from "../components/Motion";
+import ContactForm from "../components/ContactForm";
+import ContactBoard from "../components/ContactBoard";
+import { SplitLetters, FadeUp, Reveal } from "../components/Motion";
 
-export default function Contact() {
+export default function Contact({ go }) {
   return (
     <div className="wrap sec-pad">
       <section className="contact-hero">
@@ -12,27 +13,20 @@ export default function Contact() {
         </FadeUp>
         <FadeUp play delay={0.35}>
           <p className="contact-sub">
-            Placeholder line — invite people to reach out for work,
-            collaboration, or just to say hi. Replies within 24 hours.
+            Have a project, an opportunity, or just an idea worth bouncing?
+            The board is live — pick a switch.
           </p>
         </FadeUp>
-        <FadeUp play delay={0.5}>
-          <Magnetic strength={0.45}>
-            <a className="btn btn-primary" href="mailto:hello@example.com">
-              hello@example.com
-            </a>
-          </Magnetic>
-        </FadeUp>
-        <FadeUp play delay={0.65}>
-          <div className="socials">
-            {["GitHub", "LinkedIn", "Twitter / X", "Résumé"].map((s) => (
-              <a key={s} href="#" onClick={(e) => e.preventDefault()} data-hover>
-                {s} ↗
-              </a>
-            ))}
-          </div>
-        </FadeUp>
       </section>
+
+      <ContactBoard go={go} />
+
+      <div id="cform-anchor" style={{ paddingTop: 26 }}>
+        <Reveal delay={0.1}>
+          <ContactForm />
+        </Reveal>
+      </div>
+
       <footer className="foot">© 2026 Mrigank Singh · Built with React + WebGL</footer>
     </div>
   );

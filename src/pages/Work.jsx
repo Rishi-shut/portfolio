@@ -1,10 +1,24 @@
 import { Reveal } from "../components/Motion";
 
 const PROJECTS = [
-  { idx: "01", title: "Project One", tags: ["React", "Node.js", "WebGL"] },
-  { idx: "02", title: "Project Two", tags: ["TypeScript", "API"] },
-  { idx: "03", title: "Project Three", tags: ["Design", "Figma"] },
-  { idx: "04", title: "Project Four", tags: ["Three.js", "Shaders"] },
+  {
+    idx: "01",
+    title: "FraudGuard",
+    tags: ["Python", "Flask", "XGBoost", "SHAP"],
+    url: "https://credit-card-fraud-l06p.onrender.com/",
+  },
+  {
+    idx: "02",
+    title: "Pulse PFS",
+    tags: ["React", "Finance", "Dashboard"],
+    url: "https://pfs-wv9u.vercel.app/",
+  },
+  {
+    idx: "03",
+    title: "Infinite Chop",
+    tags: ["JavaScript", "Game", "Pixel-Art"],
+    url: "https://lumberjack-five.vercel.app/",
+  },
 ];
 
 export default function Work() {
@@ -13,7 +27,7 @@ export default function Work() {
       <Reveal>
         <div className="sec-head">
           <h2 className="font-display">Selected Work</h2>
-          <span>2024 — 2026</span>
+          <span>Live Projects</span>
         </div>
       </Reveal>
       <div className="work-list">
@@ -21,8 +35,9 @@ export default function Work() {
           <Reveal key={p.idx} delay={i * 0.06}>
             <a
               className="work-row"
-              href="#"
-              onClick={(e) => e.preventDefault()}
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
               data-hover
             >
               <span className="work-idx">{p.idx}</span>
@@ -37,7 +52,7 @@ export default function Work() {
           </Reveal>
         ))}
       </div>
-      <footer className="foot">© 2026 Mrigank Singh · Placeholder projects</footer>
+      <footer className="foot">© 2026 Mrigank Singh · Click a project to open the live build</footer>
     </div>
   );
 }
