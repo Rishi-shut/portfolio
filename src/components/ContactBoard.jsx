@@ -7,8 +7,8 @@ const EMAIL = "mriganksingh7890@gmail.com";
 
 const TRACKS = [
   { id: "lofi", label: "Lo-Fi", src: "./music/lofi.mp3" },
-  { id: "piano", label: "Piano", src: "./music/piano.mp3" },
-  { id: "lounge", label: "Lounge", src: "./music/lounge.mp3" },
+  { id: "rnb", label: "R&B", src: "./music/rnb.mp3" },
+  { id: "punk", label: "Punk", src: "./music/punk.mp3" },
 ];
 
 function Vinyl() {
@@ -47,7 +47,7 @@ function Vinyl() {
     if (!a) return;
     const t = TRACKS.find((x) => x.id === g);
     a.volume = 0.45;
-    if (a.src !== t.src) {
+    if (a.src.indexOf(t.src) === -1) {
       a.src = t.src;
     }
     const p = a.play();
