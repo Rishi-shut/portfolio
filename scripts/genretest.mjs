@@ -33,11 +33,11 @@ console.log("after Punk click:", await active());
 
 await page.evaluate(() => {
   [...document.querySelectorAll(".genre-btn")]
-    .find((b) => b.textContent.trim() === "Hindi")
+    .find((b) => b.textContent.trim() === "Paro")
     ?.click();
 });
-await new Promise((r) => setTimeout(r, 900));
-console.log("after Hindi click:", await active());
+await new Promise((r) => setTimeout(r, 1500));
+console.log("after Paro click:", await active());
 
 const state = await page.evaluate(() => ({
   playing: !!document.querySelector(".vinyl.spin"),

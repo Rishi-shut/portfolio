@@ -7,7 +7,11 @@ const EMAIL = "mriganksingh7890@gmail.com";
 
 const TRACKS = [
   { id: "lofi", label: "Lo-Fi", src: "./music/lofi.mp3" },
-  { id: "hindi", label: "Hindi", src: "./music/hindi.mp3" },
+  {
+    id: "paro",
+    label: "Paro",
+    src: "https://archive.org/download/paro-nej/Paro%20nej.mp3",
+  },
   { id: "punk", label: "Punk", src: "./music/punk.mp3" },
 ];
 
@@ -57,7 +61,7 @@ function Vinyl() {
 
   return (
     <Tile className="t-vinyl" delay={0.18} label="Music player">
-      <audio ref={audioRef} preload="auto" loop />
+      <audio ref={audioRef} preload="metadata" loop />
       <button
         type="button"
         className={`vinyl${playing ? " spin" : ""}`}
