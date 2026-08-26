@@ -7,7 +7,7 @@ const EMAIL = "mriganksingh7890@gmail.com";
 
 const TRACKS = [
   { id: "lofi", label: "Lo-Fi", src: "./music/lofi.mp3" },
-  { id: "rnb", label: "R&B", src: "./music/rnb.mp3" },
+  { id: "hindi", label: "Hindi", src: "./music/hindi.mp3" },
   { id: "punk", label: "Punk", src: "./music/punk.mp3" },
 ];
 
@@ -46,6 +46,7 @@ function Vinyl() {
     const a = audioRef.current;
     if (!a) return;
     const t = TRACKS.find((x) => x.id === g);
+    setGenre(g);
     a.volume = 0.45;
     if (a.src.indexOf(t.src) === -1) {
       a.src = t.src;
