@@ -8,9 +8,9 @@ const EMAIL = "mriganksingh7890@gmail.com";
 const TRACKS = [
   { id: "lofi", label: "Lo-Fi", src: "./music/lofi.mp3" },
   {
-    id: "calming",
-    label: "Calming",
-    src: "./music/calming.mp3",
+    id: "paro",
+    label: "Paro",
+    src: "https://archive.org/download/aditya-rikhari-paaro-official-video-mp-3-160-k/Aditya%20Rikhari%20-%20Paaro%20(Official%20Video)(MP3_160K).mp3",
   },
   { id: "punk", label: "Punk", src: "./music/punk.mp3" },
 ];
