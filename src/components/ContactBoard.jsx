@@ -8,9 +8,9 @@ const EMAIL = "mriganksingh7890@gmail.com";
 const TRACKS = [
   { id: "lofi", label: "Lo-Fi", src: "./music/lofi.mp3" },
   {
-    id: "paro",
-    label: "Paro",
-    src: "https://archive.org/download/paro-nej/Paro%20nej.mp3",
+    id: "calming",
+    label: "Calming",
+    src: "./music/calming.mp3",
   },
   { id: "punk", label: "Punk", src: "./music/punk.mp3" },
 ];
