@@ -8,24 +8,33 @@ const PROJECTS = [
     title: "FraudGuard",
     tags: ["Python", "Flask", "XGBoost", "SHAP"],
     url: "https://credit-card-fraud-l06p.onrender.com/",
-    desc: "Real-time credit card fraud detection platform. ML models (XGBoost, Random Forest, Logistic) score transactions instantly with SHAP explainability — plus a live stream simulator, single/batch analysis and CSV audits.",
+    shot: "/work/fraudguard.jpg",
     note: "Full Stack · Machine Learning",
+    desc: "Real-time credit card fraud detection platform. ML models (XGBoost, Random Forest, Logistic) score transactions instantly with SHAP explainability — plus a live stream simulator, single/batch analysis and CSV audits.",
+    role: "Design + Full Stack",
+    status: "Live",
   },
   {
     idx: "02",
     title: "Pulse PFS",
     tags: ["React", "Finance", "Dashboard"],
     url: "https://pfs-wv9u.vercel.app/",
-    desc: "A personal finance system that turns raw numbers into clarity — track spending, budgets and balances in one clean, fast dashboard built with React.",
+    shot: "/work/pulsepfs.jpg",
     note: "Frontend · Product Design",
+    desc: "A personal finance system that turns raw numbers into clarity — track spending, budgets and balances in one clean, fast dashboard built with React.",
+    role: "Design + Frontend",
+    status: "Live",
   },
   {
     idx: "03",
     title: "Infinite Chop",
     tags: ["JavaScript", "Game", "Pixel-Art"],
     url: "https://lumberjack-five.vercel.app/",
-    desc: "Retro pixel-art arcade game — chop fast, don't stop. Pure JavaScript with an old-school soul and one-more-go energy.",
+    shot: "/work/infinitechop.jpg",
     note: "Game · Interactive",
+    desc: "Retro pixel-art arcade game — chop fast, don't stop. Pure JavaScript with an old-school soul and one-more-go energy.",
+    role: "Everything",
+    status: "Live",
   },
 ];
 
@@ -67,12 +76,20 @@ export default function Work() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <div className="wd-inner">
+                      <div className="wd-shot">
+                        <img src={p.shot} alt={`${p.title} preview`} loading="lazy" />
+                      </div>
                       <div className="wd-text">
                         <span className="wd-note">{p.note}</span>
                         <p>{p.desc}</p>
+                        <div className="wd-meta">
+                          <div><span className="wd-k">Role</span><span>{p.role}</span></div>
+                          <div><span className="wd-k">Stack</span><span>{p.tags.join(" · ")}</span></div>
+                          <div><span className="wd-k">Status</span><span className="wd-live">● {p.status}</span></div>
+                        </div>
                       </div>
                       <a
                         className="btn btn-primary wd-btn"

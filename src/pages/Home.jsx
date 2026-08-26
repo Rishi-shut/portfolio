@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform, useScroll } from "fram
 import PrismScene from "../three/PrismScene";
 import Magnetic from "../components/Magnetic";
 import Marquee from "../components/Marquee";
-import { SplitLetters, FadeUp } from "../components/Motion";
+import { SplitLetters, FadeUp, Reveal } from "../components/Motion";
 
 const MARQUEE = [
   { text: "Design", solid: false },
@@ -42,6 +42,66 @@ function DriftCard({ speed, pos, k, v }) {
     </div>
   );
 }
+
+function Word({ children, progress, range }) {
+  const opacity = useTransform(progress, range, [0.13, 1]);
+  return (
+    <motion.span style={{ opacity }} className="rw">
+      {children}&nbsp;
+    </motion.span>
+  );
+}
+
+function ScrollWords({ text }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
+  const words = text.split(" ");
+  return (
+    <p ref={ref} className="reveal-words font-display">
+      {words.map((w, i) => (
+        <Word
+          key={i}
+          progress={scrollYProgress}
+          range={[i / words.length, Math.min(1, (i + 1.6) / words.length)]}
+        >
+          {w}
+        </Word>
+      ))}
+    </p>
+  );
+}
+
+const CAPS = [
+  {
+    t: "Frontend Engineering",
+    d: "React, TypeScript and pixel-perfect interfaces that stay fast under pressure.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M8 6l-6 6 6 6M16 6l6 6-6 6" />
+      </svg>
+    ),
+  },
+  {
+    t: "Backend & APIs",
+    d: "Node.js services, REST APIs and databases that hold up in the real world.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="7" rx="2" />
+        <rect x="3" y="13" width="18" height="7" rx="2" />
+        <path d="M7 7.5h.01M7 16.5h.01" />
+      </svg>
+    ),
+  },
+  {
+    t: "Creative WebGL",
+    d: "Shaders, 3D and motion — the details that make a page impossible to forget.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z" />
+      </svg>
+    ),
+  },
+];
 
 export default function Home({ go, start }) {
   const mx = useMotionValue(0);
@@ -141,6 +201,27 @@ export default function Home({ go, start }) {
             aesthetics into products that feel alive under the cursor.
           </p>
         </FadeUp>
+      </section>
+
+      <section className="statement">
+        <ScrollWords text="I build interfaces that feel alive — where design, code and motion meet." />
+      </section>
+
+      <section className="caps-section">
+        <div className="sec-head center-head">
+          <h2 className="font-display">What I Do</h2>
+        </div>
+        <div className="caps">
+          {CAPS.map((c, i) => (
+            <Reveal key={c.t} delay={i * 0.08}>
+              <div className="glass cap-card hoverable">
+                <span className="cap-ico">{c.icon}</span>
+                <h3>{c.t}</h3>
+                <p>{c.d}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </section>
 
       <section className="drift">
