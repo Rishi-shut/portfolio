@@ -6,20 +6,27 @@ import { gradAt, hex } from "../shader/moods";
 const EMAIL = "mriganksingh7890@gmail.com";
 
 const TRACKS = [
-  { id: "jazz", label: "Jazz", src: "./music/jazz.mp3" },
-  { id: "classic", label: "Classic", src: "./music/classical.mp3" },
   { id: "lofi", label: "Lo-Fi", src: "./music/lofi.mp3" },
+  { id: "piano", label: "Piano", src: "./music/piano.mp3" },
+  { id: "lounge", label: "Lounge", src: "./music/lounge.mp3" },
 ];
 
 function Vinyl() {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
-  const [genre, setGenre] = useState("jazz");
+  const [genre, setGenre] = useState("lofi");
 
   const track = TRACKS.find((x) => x.id === genre);
 
   useEffect(() => {
-    audioRef.current?.load();
+    const a = audioRef.current;
+    if (a) {
+      a.src = TRACKS[0].src;
+      a.load();
+    }
+    return () => {
+      if (a) a.pause();
+    };
   }, []);
 
   const toggle = () => {
@@ -39,16 +46,17 @@ function Vinyl() {
     const a = audioRef.current;
     if (!a) return;
     const t = TRACKS.find((x) => x.id === g);
-    setGenre(g);
-    if (a.src !== t.src) a.src = t.src;
     a.volume = 0.45;
+    if (a.src !== t.src) {
+      a.src = t.src;
+    }
     const p = a.play();
     if (p) p.then(() => setPlaying(true)).catch(() => setPlaying(false));
   };
 
   return (
     <Tile className="t-vinyl" delay={0.18} label="Music player">
-      <audio ref={audioRef} src={track.src} preload="auto" loop />
+      <audio ref={audioRef} preload="auto" loop />
       <button
         type="button"
         className={`vinyl${playing ? " spin" : ""}`}
@@ -56,6 +64,7 @@ function Vinyl() {
         aria-label={playing ? "Pause music" : "Play music"}
       >
         <span className="vinyl-label" />
+        <span className="vinyl-notch" />
         <span className="vinyl-hole" />
       </button>
       <div className="vinyl-eq" data-on={playing}>
