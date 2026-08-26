@@ -31,7 +31,7 @@ const KEYS = [
   ],
 ];
 
-const SCALES = [1.75, 1.3, 1.5];
+const SCALES = [0.95, 0.7, 0.85];
 
 const VERT = `
   attribute vec3 position;
@@ -62,7 +62,7 @@ const FRAG = `
     vec3 col = mix(vec3(0.03, 0.04, 0.06), uTint, 0.28 + 0.72 * fr);
     float spec = pow(max(dot(reflect(-v, n), normalize(vec3(0.4, 0.9, 0.5))), 0.0), 22.0);
     col += uTint * spec;
-    float a = (0.34 + 0.66 * fr) * smoothstep(24.0, 3.5, d);
+    float a = (0.18 + 0.42 * fr) * smoothstep(24.0, 3.5, d);
     gl_FragColor = vec4(col, a);
   }
 `;

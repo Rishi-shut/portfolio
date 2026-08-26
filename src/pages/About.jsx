@@ -136,8 +136,11 @@ export default function About() {
         {STATS.map((s, i) => (
           <Reveal key={s.lbl} delay={i * 0.06}>
             <div className="glass stat-tile">
-              <span className="stat-ic"><Icon name={s.icon} size={18} /></span>
-              {s.num ? <span className="stat-num font-display">{s.num}</span> : <span className="stat-ic big"><Icon name={s.icon} size={26} /></span>}
+              {s.num ? (
+                <span className="stat-num font-display">{s.num}</span>
+              ) : (
+                <span className="stat-ic big"><Icon name={s.icon} size={26} /></span>
+              )}
               <span className="stat-lbl">{s.lbl}</span>
               <span className="stat-sub">{s.sub}</span>
             </div>

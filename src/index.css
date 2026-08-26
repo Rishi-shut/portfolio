@@ -368,19 +368,28 @@ button:focus-visible {
 }
 
 .work-list { display: grid; }
+.work-item { position: relative; border-top: 1px solid var(--line); }
+.work-item:last-child { border-bottom: 1px solid var(--line); }
+.work-item.open .work-row {
+  background: rgb(var(--tint) / 0.06);
+}
 .work-row {
-  position: relative;
+  appearance: none;
+  background: none;
+  border: none;
+  font: inherit;
+  color: var(--ink);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
   display: grid;
   grid-template-columns: 70px 1fr auto auto;
   align-items: center;
   gap: clamp(14px, 3vw, 34px);
   padding: clamp(22px, 3.4vh, 34px) clamp(14px, 2.4vw, 26px);
-  border-top: 1px solid var(--line);
   text-decoration: none;
-  color: var(--ink);
   transition: background 280ms ease, padding-left 320ms var(--ease);
 }
-.work-row:last-child { border-bottom: 1px solid var(--line); }
 .work-row:hover {
   background: rgb(var(--tint) / 0.06);
   padding-left: clamp(26px, 4vw, 46px);
@@ -411,6 +420,35 @@ button:focus-visible {
   transition: transform 300ms var(--ease), color 220ms ease;
 }
 .work-row:hover .work-arrow { transform: translate(5px, -5px); color: rgb(var(--tint)); }
+.work-item.open .work-arrow { transform: rotate(45deg); color: rgb(var(--tint)); }
+
+.wd-text { flex: 1 1 380px; min-width: 0; }
+.wd-text p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--ink-dim);
+}
+.wd-btn { flex-shrink: 0; }
+
+.work-detail { overflow: hidden; }
+.wd-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px 30px;
+  padding: 0 clamp(14px, 2.4vw, 26px) 30px calc(70px + clamp(10px, 2vw, 20px));
+}
+.wd-note {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(var(--tint));
+  margin-bottom: 8px;
+}
 
 .tag {
   font-size: 10px;
@@ -1085,6 +1123,7 @@ textarea.finput { resize: none; line-height: 1.65; min-height: 150px; }
   gap: clamp(20px, 3.4vw, 44px);
   align-items: center;
 }
+.about-hero > * { min-width: 0; }
 .about-title {
   margin: 14px 0 18px;
   display: grid;
@@ -1115,18 +1154,18 @@ textarea.finput { resize: none; line-height: 1.65; min-height: 150px; }
 }
 .orbit-ring {
   position: absolute;
-  border: 1px dashed rgba(255, 255, 255, 0.16);
+  border: 1px dashed rgba(255, 255, 255, 0.26);
   border-radius: 50%;
 }
 .orbit-ring.r1 { inset: 39%; }
-.orbit-ring.r2 { inset: 25%; border-color: rgba(255, 255, 255, 0.12); }
+.orbit-ring.r2 { inset: 25%; border-color: rgba(255, 255, 255, 0.18); }
 .orbit-ring.r3 { inset: 9%; }
 .orbit-core {
   position: absolute;
-  inset: 47%;
+  inset: 46.5%;
   border-radius: 50%;
-  background: rgb(var(--tint) / 0.9);
-  box-shadow: 0 0 24px rgb(var(--tint) / 0.7);
+  background: rgb(var(--tint) / 0.95);
+  box-shadow: 0 0 30px rgb(var(--tint) / 0.8);
   animation: pulse 2.4s ease-in-out infinite;
 }
 .orb { position: absolute; inset: 0; animation: spin 16s linear infinite; }
@@ -1135,22 +1174,20 @@ textarea.finput { resize: none; line-height: 1.65; min-height: 150px; }
 .orb.o4 { animation-duration: 20s; animation-direction: reverse; }
 .orb i {
   position: absolute;
-  top: -3px;
+  top: -4px;
   left: 50%;
-  width: 7px;
-  height: 7px;
-  margin-left: -3px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
   border-radius: 50%;
   background: rgb(var(--tint));
-  box-shadow: 0 0 12px rgb(var(--tint) / 0.9);
+  box-shadow: 0 0 14px rgb(var(--tint));
 }
 .orb.o1 { inset: 25%; }
-.orb.o1 i { top: -3px; }
-.orb.o2 i { width: 5px; height: 5px; background: #fff; box-shadow: 0 0 10px #fff; }
+.orb.o2 i { width: 6px; height: 6px; background: #fff; box-shadow: 0 0 12px #fff; }
 .orb.o3 { inset: 9%; }
-.orb.o3 i { width: 4px; height: 4px; background: var(--ink-dim); box-shadow: none; top: -2px; }
+.orb.o3 i { width: 5px; height: 5px; background: var(--ink-dim); box-shadow: none; top: -2.5px; margin-left: -2.5px; }
 .orb.o4 { inset: 39%; }
-.orb.o4 i { width: 6px; height: 6px; top: -3px; }
 
 .glance { padding: clamp(20px, 3vw, 30px); }
 .glance-head,

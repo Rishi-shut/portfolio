@@ -18,6 +18,10 @@ function Vinyl() {
 
   const track = TRACKS.find((x) => x.id === genre);
 
+  useEffect(() => {
+    audioRef.current?.load();
+  }, []);
+
   const toggle = () => {
     const a = audioRef.current;
     if (!a) return;
@@ -26,7 +30,8 @@ function Vinyl() {
       setPlaying(false);
     } else {
       a.volume = 0.45;
-      a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+      const p = a.play();
+      if (p) p.then(() => setPlaying(true)).catch(() => setPlaying(false));
     }
   };
 
@@ -37,7 +42,8 @@ function Vinyl() {
     setGenre(g);
     if (a.src !== t.src) a.src = t.src;
     a.volume = 0.45;
-    a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    const p = a.play();
+    if (p) p.then(() => setPlaying(true)).catch(() => setPlaying(false));
   };
 
   return (
@@ -67,7 +73,7 @@ function Vinyl() {
           </button>
         ))}
       </div>
-      <span className="tile-sub">{playing ? `Now Playing · ${track.label}` : "Pick a record"}</span>
+      <span className="tile-sub vinyl-state">{playing ? `Now Playing · ${track.label}` : "Pick a record"}</span>
     </Tile>
   );
 }
